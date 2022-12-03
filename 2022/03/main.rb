@@ -22,3 +22,16 @@ sum_of_priorities = rucksacks.each.inject(0) do |sum, rucksack|
 end
 
 p sum_of_priorities
+
+sum_of_priorities_2 = rucksacks.each_slice(3).inject(0) do |sum, group|
+  first, second, third = *group
+
+  first.chars.uniq.each do |item_from_first|
+    sum += PRIORITIES[item_from_first] if second.include?(item_from_first) && third.include?(item_from_first)
+  end
+
+  sum
+end
+
+
+p sum_of_priorities_2
