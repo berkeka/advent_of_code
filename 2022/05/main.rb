@@ -8,6 +8,11 @@ instructions = instructions_str.split("\n")
 levels = grid.split("\n")
 number_of_stacks = levels.pop.gsub(' ', '').length
 
+# Step 1 of problem uses version 1 crane. Which can only pick one crate at a time
+# Crane version 2 can pick up multiple crates at once meaning we don't need to reverse
+# the crates before pushing to stack
+CRANE_VERSION = 2
+
 stacks = []
 number_of_stacks.times { stacks << [] }
 
@@ -24,19 +29,13 @@ instructions.each do |instruction|
   # move 1 from 7 to 4
   count, from, to = *instruction.scan(/move ([0-9]+) from ([0-9]+) to ([0-9]+)/).to_a[0].map(&:to_i)
   # Pop from stack
-  count.times do
-    popped = stacks[from - 1].pop
-    stacks[to - 1].push(popped)
-  end
+  stack_length = stacks[from - 1].count
 
-  # FIX-ME use slice for better performance ???
+  slice = stacks[from - 1].slice!(stack_length - count..stack_length)
 
-  # stack_length = stacks[from - 1].count
-  # p stack_length
-  # slice = stacks[from - 1].slice!(stack_length - count..stack_length)
-
-  # # Push to new stack
-  # stacks[to - 1].push(*slice)
+  slice.reverse! if CRANE_VERSION == 1
+  # Push to new stack
+  stacks[to - 1].push(*slice)
 end
 
 # Results in a segfault in 3.0.0??? 
