@@ -3,20 +3,18 @@ input = File.read(INPUT_FILE_NAME)
 
 input = input.chomp
 length = input.length
-PACKET_LENGTH = 4
+PACKET_LENGTH = 14 # 4 was the length for step 1
 
-needed_length = length - (PACKET_LENGTH - 1)
-
- # 4 for first step
+needed_packet_length = length - (PACKET_LENGTH - 1)
 
 result = -1
 
-needed_length.times do |i|
+needed_packet_length.times do |i|
   packet = input.slice(i, PACKET_LENGTH)
 
-  # + 3 for end of slice
+  # + PACKET_LENGTH for end of slice
   # + 1 for index starting from 1
-  result = i + 3 + 1; break if packet.chars.uniq.count == 4
+  result = i + (PACKET_LENGTH - 1) + 1; break if packet.chars.uniq.count == PACKET_LENGTH
 end
 
 p result
