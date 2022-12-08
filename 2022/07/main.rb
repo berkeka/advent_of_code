@@ -2,7 +2,10 @@ INPUT_FILE_NAME = File.join(File.dirname(__FILE__), 'input.txt')
 input = File.read(INPUT_FILE_NAME)
 
 lines = input.split("\n")
-# lines.shift
+
+TOTAL_DISK_SPACE = 70000000
+NEEDED_SPACE = 30000000
+
 directory_stack = []
 sizes = Hash.new(0)
 
@@ -34,4 +37,13 @@ sum_of_sizes = sizes.each.inject(0) do |sum, (dir, size)|
   sum
 end
 
+unused_space = TOTAL_DISK_SPACE - sizes[["/"]]
+deleted_dir_space = 70000000
+
+sizes.each do |_, size|
+  deleted_dir_space = size if unused_space + size >= NEEDED_SPACE && size < deleted_dir_space
+end
+
 p sum_of_sizes
+
+p deleted_dir_space
