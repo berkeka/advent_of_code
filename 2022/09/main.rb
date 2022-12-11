@@ -90,18 +90,24 @@ class Piece
 end
 
 h = Piece.new
-t = Piece.new
 
-visited_by_t = {t.to_s => true}
+rope = [h]
+9.times { rope << Piece.new } 
+
+visited_by_t = {rope.last.to_s => true}
 
 steps.each do |direction, move_count|
   move_count.times do
-    h.move(direction)
-  
-    if t.need_to_move?(h)
-      t.move_towards(h)
-      visited_by_t[t.to_s] = true unless visited_by_t.has_key?(t.to_s)
+    rope.first.move(direction)
+
+    rope.each_with_index do |_, i|
+      current_piece = rope[i]
+      previous_piece = rope[i - 1]
+      if i != 0 && current_piece.need_to_move?(previous_piece)
+        current_piece.move_towards(previous_piece)
+      end
     end
+    visited_by_t[rope.last.to_s] = true unless visited_by_t.has_key?(rope.last.to_s)
   end
 end
 
