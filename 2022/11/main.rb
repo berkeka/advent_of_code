@@ -3,7 +3,7 @@ input = File.read(INPUT_FILE_NAME)
 
 monkeys = input.split("\n\n")
 
-ROUND_COUNT = 20
+ROUND_COUNT = 10000
 
 monkeys.map!.with_index do |monkey, i|
   lines = monkey.split("\n")
@@ -19,7 +19,10 @@ monkeys.map!.with_index do |monkey, i|
   }
 end
 
-ROUND_COUNT.times do
+# Get lowest common multiple of test statements
+DIVIDED_BY = monkeys.each.inject(1) {|v, m| v *= m[:test]} # Was 3 in the first step
+
+ROUND_COUNT.times do |round|
   monkeys.each do |monkey|
     monkey[:items].length.times do
       # Get current item
@@ -35,7 +38,7 @@ ROUND_COUNT.times do
       end
   
       # Monkey is bored divide by 3
-      current_item /= 3
+      current_item %= DIVIDED_BY
   
       # Run test
       if current_item % monkey[:test] == 0
@@ -45,6 +48,7 @@ ROUND_COUNT.times do
       end
     end
   end
+  p round if round % 10 == 0
 end
 
 # Sort by inspected count
